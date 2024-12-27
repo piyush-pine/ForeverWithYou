@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>520</title>
+  <link rel="icon" href="520.svg" />
+  <link type="text/css" rel="stylesheet" href="520/default.css">
+  <script type="text/javascript" src="520/jquery.min.js"></script>
+  <script type="text/javascript" src="520/jscex.min.js"></script>
+  <script type="text/javascript" src="520/jscex-parser.js"></script>
+  <script type="text/javascript" src="520/jscex-jit.js"></script>
+  <script type="text/javascript" src="520/jscex-builderbase.min.js"></script>
+  <script type="text/javascript" src="520/jscex-async.min.js"></script>
+  <script type="text/javascript" src="520/jscex-async-powerpack.min.js"></script>
+  <script type="text/javascript" src="520/functions.js" charset="utf-8"></script>
+  <script type="text/javascript" src="520/love.js" charset="utf-8"></script>
+  <style type="text/css">
+    .STYLE1 {
+      color: #ff5e04;
+    }
+  </style>
+</head>
+<body>
+  <audio autoplay="autoplay">
+    <source src="520.mp3" type="audio/mp3" />
+  </audio>
+  <div id="main">
+    <div id="error">This page uses HTML5. Currently, your browser cannot display it. Please switch to Google Chrome or Firefox, or the latest version of another browser.</div>
+    <div id="wrap">
+      <div id="text">
+        <div id="code">
+          <font color="#FF0000"> 
+            <span class="say">Crossing mountains and rivers, I cannot compare to your smile and frown.</span><br>
+            <span class="say"></span><br>
+            <span class="say">Searching through hills and valleys cannot match you; even if I hold the pillar, I have no regrets.</span><br>
+            <span class="say"></span><br>
+            <span class="say">Silly piggy, I love you, even though you say I didn't give you a ceremonious confession.</span><br>
+            <span class="say"></span><br>
+            <span class="say">I know I currently don't have much ability to bring you anything.</span><br>
+            <span class="say"></span><br>
+            <span class="say">But I will prove everything with my actions!</span><br>
+            <span class="say"></span><br>
+            <span class="say">We will have a better future!</span><br>
+            <span class="say"></span><br>
+            <span class="say">Don't forget, I have placed an order, and I promised to take care of you for a lifetime.</span><br>
+            <span class="say"></span><br>
+            <span class="say">Our road is still long, let's work hard together for our better future!</span><br>
+            <span class="say"></span><br>
+            <span class="say"></span><br>
+            <span class="say"><span class="space"></span> --- Your loving piggy --- </span> 
+          </font>
+        </div>
+      </div>
+      <div id="clock-box"> 
+        <span class="STYLE1"></span>
+        <font color="#ff5e04">My little Monster, I love you</font> <span class="STYLE1">It's already...</span>
+        <div id="clock"></div>
+      </div>
+      <canvas id="canvas" width="1100" height="680"></canvas>
+    </div>
+  </div>
+  <script>
+    (function () {
+      var canvas = $('#canvas');
+      if (!canvas[0].getContext) {
+        $("#error").show();
+        return false;
+      }
+      var width = canvas.width();
+      var height = canvas.height();
+      canvas.attr("width", width);
+      canvas.attr("height", height);
+      var opts = {
+        seed: {
+          x: width / 2 - 20,
+          color: "rgb(190, 26, 37)",
+          scale: 2
+        },
+        branch: [
+          [535, 680, 570, 250, 500, 200, 30, 100, [
+            [540, 500, 455, 417, 340, 400, 13, 100, [
+              [450, 435, 434, 430, 394, 395, 2, 40]
+            ]],
+            [550, 445, 600, 356, 680, 345, 12, 100, [
+              [578, 400, 648, 409, 661, 426, 3, 80]
+            ]],
+            [539, 281, 537, 248, 534, 217, 3, 40],
+            [546, 397, 413, 247, 328, 244, 9, 80, [
+              [427, 286, 383, 253, 371, 205, 2, 40],
+              [498, 345, 435, 315, 395, 330, 4, 60]
+            ]],
+            [546, 357, 608, 252, 678, 221, 6, 100, [
+              [590, 293, 646, 277, 648, 271, 2, 80]
+            ]]
+          ]]
+        ],
+        bloom: {
+          num: 700,
+          width: 1080,
+          height: 650,
+        },
+        footer: {
+          width: 1200,
+          height: 5,
+          speed: 10,
+        }
+      }
+      var tree = new Tree(canvas[0], width, height, opts);
+      var seed = tree.seed;
+      var foot = tree.footer;
+      var hold = 1;
+      canvas.click(function (e) {
+        var offset = canvas.offset(), x, y;
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
+        if (seed.hover(x, y)) {
+          hold = 0;
+          canvas.unbind("click");
+          canvas.unbind("mousemove");
+          canvas.removeClass('hand');
+        }
+      }).mousemove(function (e) {
+        var offset = canvas.offset(), x, y;
+        x = e.pageX - offset.left;
+        y = e.pageY - offset.top;
+        canvas.toggleClass('hand', seed.hover(x, y));
+      });
+      var seedAnimate = eval(Jscex.compile("async", function () {
+        seed.draw();
+        while (hold) {
+          $await(Jscex.Async.sleep(10));
+        }
+        while (seed.canScale()) {
+          seed.scale(0.95);
+          $await(Jscex.Async.sleep(10));
+        }
+        while (seed.canMove()) {
+          seed.move(0, 2);
+          foot.draw();
+          $await(Jscex.Async.sleep(10));
+        }
+      }));
+      var growAnimate = eval(Jscex.compile("async", function () {
+        do {
+          tree.grow();
+          $await(Jscex.Async.sleep(10));
+        } while (tree.canGrow());
+      }));
+      var flowAnimate = eval(Jscex.compile("async", function () {
+        do {
+          tree.flower(2);
+          $await(Jscex.Async.sleep(10));
+        } while (tree.canFlower());
+      }));
+      var moveAnimate = eval(Jscex.compile("async", function () {
+        tree.snapshot("p1", 240, 0, 610, 680);
+        while (tree.move("p1", 500, 0)) {
+          foot.draw();
+          $await(Jscex.Async.sleep(10));
+        }
+        foot.draw();
+        tree.snapshot("p2", 500, 0, 610, 680);
+        canvas.parent().css("background", "url(" + tree.toDataURL('image/png') + ")");
+        canvas.css("background", "#ffe");
+        $await(Jscex.Async.sleep(300));
+        canvas.css("background", "none");
+      }));
+      var jumpAnimate = eval(Jscex.compile("async", function () {
+        var ctx = tree.ctx;
+        while (true) {
+          tree.ctx.clearRect(0, 0, width, height);
+          tree.jump();
+          foot.draw();
+          $await(Jscex.Async.sleep(25));
+        }
+      }));
+
+      // Set the starting date to March 1, 2024
+      var startDate = new Date("2024-03-01T00:00:00");
+
+      var textAnimate = eval(Jscex.compile("async", function () {
+        $("#code").show().typewriter();
+        $("#clock-box").fadeIn(500);
+        while (true) {
+          timeElapse(startDate); // Update the countdown based on the start date
+          $await(Jscex.Async.sleep(1000)); // Update every second
+        }
+      }));
+
+      var runAsync = eval(Jscex.compile("async", function () {
+        $await(seedAnimate());
+        $await(growAnimate());
+        $await(flowAnimate());
+        $await(moveAnimate());
+        textAnimate().start();
+        $await(jumpAnimate());
+      }));
+
+      runAsync().start();
+    })();
+
+    // Function to calculate and display elapsed time since the start date
+    function timeElapse(startDate) {
+      var current = new Date(); // Get the current date and time
+      var seconds = Math.floor((current - startDate) / 1000); // Calculate the difference in seconds and round down
+
+      var days = Math.floor(seconds / (3600 * 24));
+      seconds = seconds % (3600 * 24);
+      var hours = Math.floor(seconds / 3600);
+      if (hours < 10) {
+        hours = "0" + hours;
+      }
+      seconds = seconds % 3600;
+      var minutes = Math.floor(seconds / 60);
+      if (minutes < 10) {
+        minutes = "0" + minutes;
+      }
+      seconds = seconds % 60; // Get the remaining seconds
+      if (seconds < 10) {
+        seconds = "0" + seconds;
+      }
+
+      var result = "Day <span class=\"digit\">" + days + "</span>, " +
+                   hours + " Hours, " +
+                   minutes + " Minutes, " +
+                   seconds + " Seconds"; 
+      $("#clock").html(result); // Update the clock display
+    }
+  </script>
+</body>
+</html>
